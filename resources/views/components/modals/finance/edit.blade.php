@@ -60,12 +60,8 @@
 
                     <div class="mb-3">
                         <label class="form-label">Deskripsi</label>
-                        <div wire:ignore>
-                            <input id="editDescription" type="hidden" name="content">
-                            <trix-editor input="editDescription" 
-                                         wire:model="editDescription"
-                                         placeholder="Masukkan deskripsi transaksi..."></trix-editor>
-                        </div>
+                        <textarea class="form-control" wire:model="editDescription" rows="3" 
+                                  placeholder="Masukkan deskripsi transaksi..."></textarea>
                         @error('editDescription')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -85,7 +81,7 @@
                         @endif
 
                         <input type="file" class="form-control" wire:model="editReceiptImage" 
-                               accept="image/*" onchange="previewImage(this, 'editPreview')">
+                               accept="image/*">
                         <small class="text-muted">Upload gambar baru untuk mengganti</small>
                         
                         @error('editReceiptImage')
@@ -95,7 +91,9 @@
                         @if($editReceiptImage)
                             <div class="mt-2">
                                 <p class="mb-1"><small class="text-muted">Preview gambar baru:</small></p>
-                                <img id="editPreview" class="receipt-preview" style="display: none;">
+                                <img src="{{ $editReceiptImage->temporaryUrl() }}" 
+                                     class="receipt-preview rounded" 
+                                     alt="New Receipt">
                             </div>
                         @endif
 
@@ -106,7 +104,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
                         <span wire:loading.remove wire:target="editRecord">Simpan Perubahan</span>
                         <span wire:loading wire:target="editRecord">
                             <span class="spinner-border spinner-border-sm"></span> Menyimpan...
@@ -117,13 +115,3 @@
         </div>
     </div>
 </form>
-
-@push('scripts')
-<script>
-    document.addEventListener('trix-change', function(event) {
-        if (event.target.id === 'editDescription') {
-            @this.set('editDescription', event.target.value);
-        }
-    });
-</script>
-@endpush

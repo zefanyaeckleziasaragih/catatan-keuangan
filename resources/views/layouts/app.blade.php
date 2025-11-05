@@ -24,9 +24,6 @@
     {{-- ApexCharts CSS --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.css">
     
-    {{-- Trix Editor CSS --}}
-    <link rel="stylesheet" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
-    
     {{-- Custom CSS --}}
     <style>
         .card-stats {
@@ -55,13 +52,6 @@
             max-height: 200px;
             object-fit: cover;
             cursor: pointer;
-        }
-        /* Trix Editor Custom */
-        trix-toolbar .trix-button-group {
-            margin-bottom: 0;
-        }
-        trix-editor {
-            min-height: 150px;
         }
     </style>
     
@@ -126,33 +116,35 @@
     {{-- ApexCharts JS --}}
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
-    {{-- Trix Editor JS --}}
-    <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
+    @livewireScripts
     
     <script>
         document.addEventListener("livewire:initialized", () => {
+            // Handle closeModal event
             Livewire.on("closeModal", (data) => {
-                const modal = bootstrap.Modal.getInstance(
-                    document.getElementById(data.id)
-                );
-                if (modal) {
-                    modal.hide();
+                const modalElement = document.getElementById(data.id);
+                if (modalElement) {
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) {
+                        modal.hide();
+                    }
                 }
             });
 
+            // Handle showModal event
             Livewire.on("showModal", (data) => {
-                const modal = bootstrap.Modal.getOrCreateInstance(
-                    document.getElementById(data.id)
-                );
-                if (modal) {
+                const modalElement = document.getElementById(data.id);
+                if (modalElement) {
+                    const modal = new bootstrap.Modal(modalElement);
                     modal.show();
                 }
             });
 
+            // Handle showAlert event
             Livewire.on("showAlert", (data) => {
                 Swal.fire({
                     icon: data.type,
-                    title: data.type === 'success' ? 'Berhasil!' : 'Gagal!',
+                    title: data.type === 'success' ? 'Berhasil!',
                     text: data.message,
                     timer: 3000,
                     showConfirmButton: false,
@@ -192,7 +184,6 @@
         }
     </script>
     
-    @livewireScripts
     @stack('scripts')
 </body>
 

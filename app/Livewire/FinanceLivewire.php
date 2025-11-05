@@ -184,6 +184,10 @@ class FinanceLivewire extends Component
             ->first();
 
         if (!$record) {
+            $this->dispatch('showAlert', [
+                'type' => 'error',
+                'message' => 'Data tidak ditemukan!'
+            ]);
             return;
         }
 
@@ -195,6 +199,7 @@ class FinanceLivewire extends Component
         $this->editTransactionDate = $record->transaction_date->format('Y-m-d');
         $this->currentReceiptImage = $record->receipt_image;
 
+        // Gunakan JavaScript dispatch untuk membuka modal
         $this->dispatch('showModal', id: 'editRecordModal');
     }
 
@@ -265,12 +270,17 @@ class FinanceLivewire extends Component
             ->first();
 
         if (!$record) {
+            $this->dispatch('showAlert', [
+                'type' => 'error',
+                'message' => 'Data tidak ditemukan!'
+            ]);
             return;
         }
 
         $this->deleteRecordId = $record->id;
         $this->deleteRecordInfo = $record->category . ' - Rp ' . number_format($record->amount, 0, ',', '.');
 
+        // Gunakan JavaScript dispatch untuk membuka modal
         $this->dispatch('showModal', id: 'deleteRecordModal');
     }
 

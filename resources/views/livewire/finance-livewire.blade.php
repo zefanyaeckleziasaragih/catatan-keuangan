@@ -103,79 +103,104 @@
 
     {{-- Table --}}
     <div class="card shadow-sm">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th style="width: 5%">No</th>
-                        <th style="width: 10%">Tanggal</th>
-                        <th style="width: 10%">Tipe</th>
-                        <th style="width: 15%">Kategori</th>
-                        <th style="width: 15%">Jumlah</th>
-                        <th style="width: 25%">Deskripsi</th>
-                        <th style="width: 10%">Bukti</th>
-                        <th style="width: 10%">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($records as $key => $record)
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
                         <tr>
-                            <td>{{ $records->firstItem() + $key }}</td>
-                            <td>{{ $record->transaction_date->format('d/m/Y') }}</td>
-                            <td>
-                                <span class="badge {{ $record->type == 'income' ? 'badge-income' : 'badge-expense' }}">
-                                    {{ $record->type == 'income' ? '↑ Pemasukan' : '↓ Pengeluaran' }}
-                                </span>
-                            </td>
-                            <td>{{ $record->category }}</td>
-                            <td class="{{ $record->type == 'income' ? 'text-success' : 'text-danger' }} fw-bold">
-                                Rp {{ number_format($record->amount, 0, ',', '.') }}
-                            </td>
-                            <td>
-                                <small>{{ Str::limit(strip_tags($record->description), 50) }}</small>
-                            </td>
-                            <td>
-                                @if($record->receipt_image)
-                                    <img src="{{ asset('storage/' . $record->receipt_image) }}" 
-                                         class="receipt-preview rounded" 
-                                         alt="Receipt"
-                                         onclick="viewImage('{{ asset('storage/' . $record->receipt_image) }}')">
-                                @else
-                                    <small class="text-muted">Tidak ada</small>
-                                @endif
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-warning" 
-                                        wire:click="prepareEditRecord({{ $record->id }})">
-                                    ✏️
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger" 
-                                        wire:click="prepareDeleteRecord({{ $record->id }})">
-                                    🗑️
-                                </button>
-                            </td>
+                            <th style="width: 5%">No</th>
+                            <th style="width: 10%">Tanggal</th>
+                            <th style="width: 10%">Tipe</th>
+                            <th style="width: 15%">Kategori</th>
+                            <th style="width: 15%">Jumlah</th>
+                            <th style="width: 25%">Deskripsi</th>
+                            <th style="width: 10%">Bukti</th>
+                            <th style="width: 10%">Aksi</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="text-center py-4">
-                                <p class="text-muted mb-0">Belum ada data transaksi</p>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @forelse($records as $key => $record)
+                            <tr>
+                                <td>{{ $records->firstItem() + $key }}</td>
+                                <td>{{ $record->transaction_date->format('d/m/Y') }}</td>
+                                <td>
+                                    <span class="badge {{ $record->type == 'income' ? 'badge-income' : 'badge-expense' }}">
+                                        {{ $record->type == 'income' ? '↑ Pemasukan' : '↓ Pengeluaran' }}
+                                    </span>
+                                </td>
+                                <td>{{ $record->category }}</td>
+                                <td class="{{ $record->type == 'income' ? 'text-success' : 'text-danger' }} fw-bold">
+                                    Rp {{ number_format($record->amount, 0, ',', '.') }}
+                                </td>
+                                <td>
+                                    <small>{{ Str::limit(strip_tags($record->description), 50) }}</small>
+                                </td>
+                                <td>
+                                    @if($record->receipt_image)
+                                        <img src="{{ asset('storage/' . $record->receipt_image) }}" 
+                                             class="receipt-preview rounded" 
+                                             alt="Receipt"
+                                             onclick="viewImage('{{ asset('storage/' . $record->receipt_image) }}')">
+                                    @else
+                                        <small class="text-muted">Tidak ada</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-warning btn-edit-record" 
+                                            data-id="{{ $record->id }}">
+                                        ✏️
+                                    </button>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger btn-delete-record" 
+                                            data-id="{{ $record->id }}">
+                                        🗑️
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    <p class="text-muted mb-0">Belum ada data transaksi</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-        {{-- Pagination --}}
-        <div class="mt-3">
-            {{ $records->links() }}
+            {{-- Pagination --}}
+            <div class="mt-3">
+                {{ $records->links() }}
+            </div>
         </div>
     </div>
-</div>
 
     {{-- Modals --}}
     @include('components.modals.finance.add')
     @include('components.modals.finance.edit')
     @include('components.modals.finance.delete')
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Event delegation untuk tombol edit
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-edit-record')) {
+                const button = e.target.closest('.btn-edit-record');
+                const id = button.getAttribute('data-id');
+                console.log('Edit clicked for ID:', id); // Debug
+                @this.call('prepareEditRecord', id);
+            }
+            
+            if (e.target.closest('.btn-delete-record')) {
+                const button = e.target.closest('.btn-delete-record');
+                const id = button.getAttribute('data-id');
+                console.log('Delete clicked for ID:', id); // Debug
+                @this.call('prepareDeleteRecord', id);
+            }
+        });
+    });
+</script>
+@endpush
