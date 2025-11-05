@@ -51,7 +51,7 @@
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Pilih Bulan</label>
+                    <label class="form-label">Pilih Bulan (untuk breakdown kategori)</label>
                     <select class="form-select" wire:model.live="selectedMonth">
                         <option value="01">Januari</option>
                         <option value="02">Februari</option>
