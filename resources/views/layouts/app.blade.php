@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Icon --}}
-    <link rel="icon" href="/logo.png" type="image/x-icon" />
+    <link rel="icon" href="/logo.png" type="image/x-icon" width="64" height="64"/>
 
     {{-- Judul --}}
     <title>Catatan Keuangan - @yield('title', 'Dashboard')</title>

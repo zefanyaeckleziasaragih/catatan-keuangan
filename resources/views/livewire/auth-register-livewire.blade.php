@@ -3,7 +3,7 @@
         <div class="card-body">
             <div>
                 <div class="text-center">
-                    <img src="/logo.png" alt="Logo">
+                    <img src="/logo.png" alt="Logo" width="64" height="64">
                     <h2>Mendaftar</h2>
                 </div>
                 <hr>
