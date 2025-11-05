@@ -44,7 +44,7 @@
                             </h3>
                         </div>
                         <div class="{{ $balance >= 0 ? 'text-primary' : 'text-danger' }}">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem;">💰</i>
+                            <class="bi bi-wallet2" style="font-size: 2.5rem;">💰</class=>
                         </div>
                     </div>
                 </div>
