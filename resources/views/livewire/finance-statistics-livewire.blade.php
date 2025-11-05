@@ -77,7 +77,7 @@
             <h5 class="mb-0">Grafik Pemasukan & Pengeluaran Bulanan ({{ $selectedYear }})</h5>
         </div>
         <div class="card-body">
-            <div id="monthlyChart"></div>
+            <div id="monthlyChart" wire:ignore></div>
         </div>
     </div>
 
@@ -92,7 +92,7 @@
                     </small>
                 </div>
                 <div class="card-body">
-                    <div id="incomeCategoryChart"></div>
+                    <div id="incomeCategoryChart" wire:ignore></div>
                     
                     @if($incomeByCategory->count() > 0)
                         <div class="mt-3">
@@ -125,7 +125,7 @@
                     </small>
                 </div>
                 <div class="card-body">
-                    <div id="expenseCategoryChart"></div>
+                    <div id="expenseCategoryChart" wire:ignore></div>
                     
                     @if($expenseByCategory->count() > 0)
                         <div class="mt-3">
@@ -153,12 +153,20 @@
 
 @push('scripts')
 <script>
+    let monthlyChart, incomeChart, expenseChart;
+
     document.addEventListener('livewire:initialized', () => {
         renderCharts();
     });
 
     Livewire.on('chartDataUpdated', () => {
-        renderCharts();
+        // Destroy existing charts
+        if (monthlyChart) monthlyChart.destroy();
+        if (incomeChart) incomeChart.destroy();
+        if (expenseChart) expenseChart.destroy();
+        
+        // Re-render after a short delay
+        setTimeout(() => renderCharts(), 100);
     });
 
     function renderCharts() {
@@ -214,11 +222,11 @@
             }
         };
 
-        const monthlyChart = new ApexCharts(document.querySelector("#monthlyChart"), monthlyOptions);
+        monthlyChart = new ApexCharts(document.querySelector("#monthlyChart"), monthlyOptions);
         monthlyChart.render();
 
         // Income Category Chart
-        const incomeData = @json($incomeByCategory);
+        const incomeData = @json($incomeByCategory->values());
         if (incomeData.length > 0) {
             const incomeOptions = {
                 series: incomeData.map(d => parseFloat(d.total)),
@@ -240,12 +248,12 @@
                 }
             };
 
-            const incomeChart = new ApexCharts(document.querySelector("#incomeCategoryChart"), incomeOptions);
+            incomeChart = new ApexCharts(document.querySelector("#incomeCategoryChart"), incomeOptions);
             incomeChart.render();
         }
 
         // Expense Category Chart
-        const expenseData = @json($expenseByCategory);
+        const expenseData = @json($expenseByCategory->values());
         if (expenseData.length > 0) {
             const expenseOptions = {
                 series: expenseData.map(d => parseFloat(d.total)),
@@ -267,7 +275,7 @@
                 }
             };
 
-            const expenseChart = new ApexCharts(document.querySelector("#expenseCategoryChart"), expenseOptions);
+            expenseChart = new ApexCharts(document.querySelector("#expenseCategoryChart"), expenseOptions);
             expenseChart.render();
         }
     }

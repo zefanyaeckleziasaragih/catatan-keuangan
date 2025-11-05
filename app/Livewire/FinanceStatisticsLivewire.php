@@ -22,15 +22,15 @@ class FinanceStatisticsLivewire extends Component
 
     public function render()
     {
-        // Monthly data for the selected year
+        // Monthly data for the selected year - FIXED for PostgreSQL
         $monthlyData = FinancialRecord::where('user_id', $this->auth->id)
             ->whereYear('transaction_date', $this->selectedYear)
             ->select(
-                DB::raw('MONTH(transaction_date) as month'),
-                DB::raw('SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as income'),
-                DB::raw('SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as expense')
+                DB::raw('EXTRACT(MONTH FROM transaction_date) as month'),
+                DB::raw('SUM(CASE WHEN type = \'income\' THEN amount ELSE 0 END) as income'),
+                DB::raw('SUM(CASE WHEN type = \'expense\' THEN amount ELSE 0 END) as expense')
             )
-            ->groupBy('month')
+            ->groupBy(DB::raw('EXTRACT(MONTH FROM transaction_date)'))
             ->orderBy('month')
             ->get()
             ->keyBy('month');
@@ -38,10 +38,11 @@ class FinanceStatisticsLivewire extends Component
         // Fill missing months with zero
         $chartData = [];
         for ($i = 1; $i <= 12; $i++) {
+            $monthData = $monthlyData->get($i);
             $chartData[] = [
                 'month' => $i,
-                'income' => $monthlyData->get($i)->income ?? 0,
-                'expense' => $monthlyData->get($i)->expense ?? 0,
+                'income' => $monthData ? floatval($monthData->income) : 0,
+                'expense' => $monthData ? floatval($monthData->expense) : 0,
             ];
         }
 
@@ -90,5 +91,15 @@ class FinanceStatisticsLivewire extends Component
             'thisMonthIncome' => $thisMonthIncome,
             'thisMonthExpense' => $thisMonthExpense,
         ]);
+    }
+
+    public function updatedSelectedYear()
+    {
+        $this->dispatch('chartDataUpdated');
+    }
+
+    public function updatedSelectedMonth()
+    {
+        $this->dispatch('chartDataUpdated');
     }
 }
