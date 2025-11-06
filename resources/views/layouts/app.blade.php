@@ -144,7 +144,7 @@
             Livewire.on("showAlert", (data) => {
                 Swal.fire({
                     icon: data.type,
-                    title: data.type === 'success' ? 'Berhasil!',
+                    title: data.type === 'success' ? 'Berhasil!' : 'Berhasil!',
                     text: data.message,
                     timer: 3000,
                     showConfirmButton: false,
