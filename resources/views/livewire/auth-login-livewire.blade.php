@@ -1,37 +1,44 @@
 <form wire:submit.prevent="login">
-    <div class="card mx-auto" style="max-width: 360px;">
+    <div class="card">
         <div class="card-body">
-            <div>
-                <div class="text-center">
-                    <img src="/logo.png" alt="Logo" width="64" height="64">
-                    <h2>Masuk</h2>
-                </div>
-                <hr>
-                {{-- Alamat Email --}}
-                <div class="form-group mb-3">
-                    <label>Email</label>
-                    <input type="email" class="form-control" wire:model="email">
-                    @error('email')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-                {{-- Kata Sandi --}}
-                <div class="form-group mb-3">
-                    <label>Kata Sandi</label>
-                    <input type="password" class="form-control" wire:model="password">
-                    @error('password')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                {{-- Kirim --}}
-                <div class="form-group mt-3 text-end">
-                    <button type="submit" class="btn btn-primary btn-block">Kirim</button>
-                </div>
-
-                <hr>
-                <p class="text-center">Belum memiliki akun? <a href="{{ route('auth.register') }}">Daftar</a></p>
+            <div class="logo-section">
+                <img src="/logo.png" alt="Logo">
+                <h2 class="heading-font">CASHFLOW</h2>
+                <p>Masuk ke akun Anda</p>
             </div>
+
+            {{-- Email --}}
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" wire:model="email" placeholder="nama@example.com">
+                @error('email')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+
+            {{-- Password --}}
+            <div class="form-group">
+                <label class="form-label">Kata Sandi</label>
+                <input type="password" class="form-control" wire:model="password" placeholder="••••••••">
+                @error('password')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+
+            {{-- Submit Button --}}
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <span wire:loading.remove wire:target="login">Masuk</span>
+                    <span wire:loading wire:target="login">Memproses...</span>
+                </button>
+            </div>
+
+            <hr>
+            
+            <p class="text-center mb-0">
+                Belum memiliki akun? 
+                <a href="{{ route('auth.register') }}">Daftar Sekarang</a>
+            </p>
         </div>
     </div>
 </form>

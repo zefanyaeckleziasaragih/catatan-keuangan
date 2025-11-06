@@ -2,15 +2,17 @@
     {{-- Summary Cards --}}
     <div class="row mb-4">
         <div class="col-md-4 mb-3">
-            <div class="card card-stats income shadow-sm">
+            <div class="card card-stats income">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-2">Total Pemasukan</h6>
-                            <h3 class="mb-0 text-success">Rp {{ number_format($totalIncome, 0, ',', '.') }}</h3>
+                            <h6 class="text-muted mb-2" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Total Pemasukan</h6>
+                            <h3 class="mb-0 text-success glow-text" style="font-family: 'Playfair Display', serif;">
+                                Rp {{ number_format($totalIncome, 0, ',', '.') }}
+                            </h3>
                         </div>
-                        <div class="text-success">
-                            <i class="bi bi-arrow-up-circle" style="font-size: 2.5rem;">↑</i>
+                        <div class="text-success" style="font-size: 3rem; opacity: 0.3;">
+                            ↑
                         </div>
                     </div>
                 </div>
@@ -18,15 +20,17 @@
         </div>
         
         <div class="col-md-4 mb-3">
-            <div class="card card-stats expense shadow-sm">
+            <div class="card card-stats expense">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-2">Total Pengeluaran</h6>
-                            <h3 class="mb-0 text-danger">Rp {{ number_format($totalExpense, 0, ',', '.') }}</h3>
+                            <h6 class="text-muted mb-2" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Total Pengeluaran</h6>
+                            <h3 class="mb-0 text-danger" style="font-family: 'Playfair Display', serif;">
+                                Rp {{ number_format($totalExpense, 0, ',', '.') }}
+                            </h3>
                         </div>
-                        <div class="text-danger">
-                            <i class="bi bi-arrow-down-circle" style="font-size: 2.5rem;">↓</i>
+                        <div class="text-danger" style="font-size: 3rem; opacity: 0.3;">
+                            ↓
                         </div>
                     </div>
                 </div>
@@ -34,17 +38,17 @@
         </div>
         
         <div class="col-md-4 mb-3">
-            <div class="card card-stats balance shadow-sm">
+            <div class="card card-stats balance">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-2">Saldo</h6>
-                            <h3 class="mb-0 {{ $balance >= 0 ? 'text-primary' : 'text-danger' }}">
+                            <h6 class="text-muted mb-2" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Saldo</h6>
+                            <h3 class="mb-0 {{ $balance >= 0 ? 'text-success' : 'text-danger' }}" style="font-family: 'Playfair Display', serif;">
                                 Rp {{ number_format($balance, 0, ',', '.') }}
                             </h3>
                         </div>
-                        <div class="{{ $balance >= 0 ? 'text-primary' : 'text-danger' }}">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem;">💰</i>
+                        <div class="{{ $balance >= 0 ? 'text-success' : 'text-danger' }}" style="font-size: 3rem; opacity: 0.3;">
+                            💰
                         </div>
                     </div>
                 </div>
@@ -53,11 +57,11 @@
     </div>
 
     {{-- Filters & Actions --}}
-    <div class="card shadow-sm mb-4">
+    <div class="card mb-4">
         <div class="card-body">
-            <div class="row g-3">
+            <div class="row g-3 mb-3">
                 <div class="col-md-3">
-                    <input type="text" class="form-control" placeholder="Cari..." wire:model.live="search">
+                    <input type="text" class="form-control" placeholder="🔍 Cari transaksi..." wire:model.live="search">
                 </div>
                 <div class="col-md-2">
                     <select class="form-select" wire:model.live="filterType">
@@ -93,7 +97,7 @@
                     </button>
                 </div>
             </div>
-            <div class="mt-3">
+            <div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRecordModal">
                     ➕ Tambah Transaksi
                 </button>
@@ -102,11 +106,11 @@
     </div>
 
     {{-- Table --}}
-    <div class="card shadow-sm">
+    <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
+                <table class="table">
+                    <thead>
                         <tr>
                             <th style="width: 5%">No</th>
                             <th style="width: 10%">Tanggal</th>
@@ -138,7 +142,7 @@
                                 <td>
                                     @if($record->receipt_image)
                                         <img src="{{ asset('storage/' . $record->receipt_image) }}" 
-                                             class="receipt-preview rounded" 
+                                             class="receipt-preview" 
                                              alt="Receipt"
                                              onclick="viewImage('{{ asset('storage/' . $record->receipt_image) }}')">
                                     @else
@@ -147,21 +151,24 @@
                                 </td>
                                 <td>
                                     <button type="button" 
-                                            class="btn btn-sm btn-warning btn-edit-record" 
-                                            data-id="{{ $record->id }}">
+                                            class="btn btn-sm btn-warning btn-edit-record me-1" 
+                                            data-id="{{ $record->id }}"
+                                            style="padding: 0.25rem 0.5rem;">
                                         ✏️
                                     </button>
                                     <button type="button" 
                                             class="btn btn-sm btn-danger btn-delete-record" 
-                                            data-id="{{ $record->id }}">
+                                            data-id="{{ $record->id }}"
+                                            style="padding: 0.25rem 0.5rem;">
                                         🗑️
                                     </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-4">
-                                    <p class="text-muted mb-0">Belum ada data transaksi</p>
+                                <td colspan="8" class="text-center py-5">
+                                    <div style="opacity: 0.5; font-size: 3rem;">📊</div>
+                                    <p class="text-muted mb-0 mt-2">Belum ada data transaksi</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -190,14 +197,14 @@
             if (e.target.closest('.btn-edit-record')) {
                 const button = e.target.closest('.btn-edit-record');
                 const id = button.getAttribute('data-id');
-                console.log('Edit clicked for ID:', id); // Debug
+                console.log('Edit clicked for ID:', id);
                 @this.call('prepareEditRecord', id);
             }
             
             if (e.target.closest('.btn-delete-record')) {
                 const button = e.target.closest('.btn-delete-record');
                 const id = button.getAttribute('data-id');
-                console.log('Delete clicked for ID:', id); // Debug
+                console.log('Delete clicked for ID:', id);
                 @this.call('prepareDeleteRecord', id);
             }
         });
