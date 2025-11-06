@@ -107,9 +107,9 @@
 
     {{-- Table --}}
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding: 0;">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-finance mb-0">
                     <thead>
                         <tr>
                             <th style="width: 5%">No</th>
@@ -124,7 +124,7 @@
                     </thead>
                     <tbody>
                         @forelse($records as $key => $record)
-                            <tr>
+                            <tr class="table-row-{{ $record->type }}">
                                 <td>{{ $records->firstItem() + $key }}</td>
                                 <td>{{ $record->transaction_date->format('d/m/Y') }}</td>
                                 <td>
@@ -166,7 +166,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-5">
+                                <td colspan="8" class="text-center py-5" style="background: var(--dark-card) !important;">
                                     <div style="opacity: 0.5; font-size: 3rem;">📊</div>
                                     <p class="text-muted mb-0 mt-2">Belum ada data transaksi</p>
                                 </td>
@@ -177,7 +177,7 @@
             </div>
 
             {{-- Pagination --}}
-            <div class="mt-3">
+            <div class="mt-3 px-3 pb-3">
                 {{ $records->links() }}
             </div>
         </div>
@@ -188,6 +188,107 @@
     @include('components.modals.finance.edit')
     @include('components.modals.finance.delete')
 </div>
+
+@push('styles')
+<style>
+    /* Table Finance Styling */
+    .table-finance {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table-finance thead th {
+        background: var(--dark-bg);
+        color: var(--neon-green);
+        border: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        padding: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table-finance tbody tr {
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    /* Income Row Styling - Hijau seperti pie chart */
+    .table-finance tbody tr.table-row-income td {
+        background: rgba(0, 255, 135, 0.1);
+        border-top: 1px solid rgba(0, 255, 135, 0.2);
+        border-bottom: 1px solid rgba(0, 255, 135, 0.2);
+    }
+
+    .table-finance tbody tr.table-row-income td:first-child {
+        border-left: 4px solid var(--neon-green);
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .table-finance tbody tr.table-row-income td:last-child {
+        border-right: 1px solid rgba(0, 255, 135, 0.2);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .table-finance tbody tr.table-row-income:hover td {
+        background: rgba(0, 255, 135, 0.15);
+        box-shadow: 0 4px 20px rgba(0, 255, 135, 0.2);
+    }
+
+    /* Expense Row Styling - Merah seperti pie chart */
+    .table-finance tbody tr.table-row-expense td {
+        background: rgba(255, 71, 87, 0.1);
+        border-top: 1px solid rgba(255, 71, 87, 0.2);
+        border-bottom: 1px solid rgba(255, 71, 87, 0.2);
+    }
+
+    .table-finance tbody tr.table-row-expense td:first-child {
+        border-left: 4px solid #ff4757;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .table-finance tbody tr.table-row-expense td:last-child {
+        border-right: 1px solid rgba(255, 71, 87, 0.2);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .table-finance tbody tr.table-row-expense:hover td {
+        background: rgba(255, 71, 87, 0.15);
+        box-shadow: 0 4px 20px rgba(255, 71, 87, 0.2);
+    }
+
+    .table-finance tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        color: var(--text-primary);
+    }
+
+    /* Spacing between rows */
+    .table-finance tbody tr td {
+        border-top: none;
+    }
+
+    .table-finance tbody tr:not(:last-child) td {
+        padding-bottom: 0.75rem;
+    }
+
+    .table-finance tbody tr:not(:first-child) td {
+        padding-top: 0.75rem;
+    }
+
+    /* Add spacing between rows */
+    .table-finance tbody tr + tr td {
+        margin-top: 0.5rem;
+    }
+</style>
+@endpush
 
 @push('scripts')
 <script>
