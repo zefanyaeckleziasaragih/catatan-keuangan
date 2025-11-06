@@ -94,8 +94,8 @@
     {{-- Category Breakdown --}}
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header" style="background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-green-dark) 100%); border-radius: 15px 15px 0 0;">
+            <div class="card" style="background: var(--dark-card); border: 1px solid rgba(0, 255, 135, 0.2);">
+                <div class="card-header" style="background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-green-dark) 100%); border-radius: 15px 15px 0 0; border-bottom: none;">
                     <h5 class="mb-0" style="color: var(--dark-bg); font-family: 'Playfair Display', serif;">
                         Pemasukan per Kategori
                     </h5>
@@ -103,23 +103,19 @@
                         {{ DateTime::createFromFormat('!m', $selectedMonth)->format('F') }} {{ $selectedYear }}
                     </small>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="background: var(--dark-card);">
                     <div id="incomeCategoryChart" wire:ignore></div>
                     
                     @if($incomeByCategory->count() > 0)
                         <div class="mt-3">
-                            <table class="table table-sm">
-                                <tbody>
-                                    @foreach($incomeByCategory as $item)
-                                        <tr style="background: rgba(21, 27, 53, 0.5);">
-                                            <td style="color: var(--text-primary); border: none; padding: 0.75rem;">{{ $item->category }}</td>
-                                            <td class="text-end fw-bold" style="color: var(--neon-green); border: none; padding: 0.75rem;">
-                                                Rp {{ number_format($item->total, 0, ',', '.') }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            @foreach($incomeByCategory as $item)
+                                <div class="d-flex justify-content-between align-items-center mb-2 p-3" style="background: rgba(0, 255, 135, 0.1); border-radius: 10px; border-left: 4px solid var(--neon-green);">
+                                    <span style="color: var(--text-primary); font-weight: 500;">{{ $item->category }}</span>
+                                    <span class="fw-bold" style="color: var(--neon-green); font-size: 1.1rem;">
+                                        Rp {{ number_format($item->total, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                            @endforeach
                         </div>
                     @else
                         <p class="text-center my-4" style="color: var(--text-secondary); opacity: 0.7;">
@@ -132,8 +128,8 @@
         </div>
 
         <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header" style="background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%); border-radius: 15px 15px 0 0;">
+            <div class="card" style="background: var(--dark-card); border: 1px solid rgba(255, 71, 87, 0.2);">
+                <div class="card-header" style="background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%); border-radius: 15px 15px 0 0; border-bottom: none;">
                     <h5 class="mb-0" style="color: white; font-family: 'Playfair Display', serif;">
                         Pengeluaran per Kategori
                     </h5>
@@ -141,23 +137,19 @@
                         {{ DateTime::createFromFormat('!m', $selectedMonth)->format('F') }} {{ $selectedYear }}
                     </small>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="background: var(--dark-card);">
                     <div id="expenseCategoryChart" wire:ignore></div>
                     
                     @if($expenseByCategory->count() > 0)
                         <div class="mt-3">
-                            <table class="table table-sm">
-                                <tbody>
-                                    @foreach($expenseByCategory as $item)
-                                        <tr style="background: rgba(21, 27, 53, 0.5);">
-                                            <td style="color: var(--text-primary); border: none; padding: 0.75rem;">{{ $item->category }}</td>
-                                            <td class="text-end fw-bold" style="color: #ff4757; border: none; padding: 0.75rem;">
-                                                Rp {{ number_format($item->total, 0, ',', '.') }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            @foreach($expenseByCategory as $item)
+                                <div class="d-flex justify-content-between align-items-center mb-2 p-3" style="background: rgba(255, 71, 87, 0.1); border-radius: 10px; border-left: 4px solid #ff4757;">
+                                    <span style="color: var(--text-primary); font-weight: 500;">{{ $item->category }}</span>
+                                    <span class="fw-bold" style="color: #ff4757; font-size: 1.1rem;">
+                                        Rp {{ number_format($item->total, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                            @endforeach
                         </div>
                     @else
                         <p class="text-center my-4" style="color: var(--text-secondary); opacity: 0.7;">
@@ -311,12 +303,15 @@
                     background: 'transparent'
                 },
                 labels: incomeData.map(d => d.category),
-                colors: ['#00ff87', '#00cc6d', '#00994a', '#00ffb3', '#00e07a'],
+                colors: ['#00ff87', '#00e07a', '#00cc6d', '#00b861', '#00a454', '#009047', '#007c3a'],
                 legend: {
                     position: 'bottom',
                     labels: {
-                        colors: '#ffffff'
-                    }
+                        colors: '#8b92b0',
+                        useSeriesColors: false
+                    },
+                    fontSize: '13px',
+                    fontWeight: 500
                 },
                 tooltip: {
                     theme: 'dark',
@@ -324,15 +319,26 @@
                         formatter: function(val) {
                             return 'Rp ' + val.toLocaleString('id-ID');
                         }
+                    },
+                    style: {
+                        fontSize: '13px'
                     }
                 },
                 dataLabels: {
                     enabled: true,
                     style: {
-                        fontSize: '14px',
+                        fontSize: '13px',
                         fontWeight: 'bold',
                         colors: ['#0a0e27']
+                    },
+                    dropShadow: {
+                        enabled: false
                     }
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['#0a0e27']
                 },
                 plotOptions: {
                     pie: {
@@ -341,19 +347,27 @@
                             labels: {
                                 show: true,
                                 name: {
-                                    color: '#ffffff'
+                                    show: true,
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    color: '#8b92b0',
+                                    offsetY: -10
                                 },
                                 value: {
-                                    color: '#00ff87',
-                                    fontSize: '20px',
+                                    show: true,
+                                    fontSize: '18px',
                                     fontWeight: 'bold',
+                                    color: '#00ff87',
+                                    offsetY: 5,
                                     formatter: function(val) {
                                         return 'Rp ' + parseFloat(val).toLocaleString('id-ID');
                                     }
                                 },
                                 total: {
                                     show: true,
-                                    label: 'Total',
+                                    label: 'Total Pemasukan',
+                                    fontSize: '13px',
+                                    fontWeight: 600,
                                     color: '#8b92b0',
                                     formatter: function(w) {
                                         const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
@@ -381,12 +395,15 @@
                     background: 'transparent'
                 },
                 labels: expenseData.map(d => d.category),
-                colors: ['#ff4757', '#ff6b81', '#ffa502', '#ff7f00', '#ff3838'],
+                colors: ['#ff4757', '#ff6b81', '#ffa502', '#ff7f00', '#ff3838', '#e84118', '#c23616'],
                 legend: {
                     position: 'bottom',
                     labels: {
-                        colors: '#ffffff'
-                    }
+                        colors: '#8b92b0',
+                        useSeriesColors: false
+                    },
+                    fontSize: '13px',
+                    fontWeight: 500
                 },
                 tooltip: {
                     theme: 'dark',
@@ -394,15 +411,31 @@
                         formatter: function(val) {
                             return 'Rp ' + val.toLocaleString('id-ID');
                         }
+                    },
+                    style: {
+                        fontSize: '13px'
                     }
                 },
                 dataLabels: {
                     enabled: true,
                     style: {
-                        fontSize: '14px',
+                        fontSize: '13px',
                         fontWeight: 'bold',
                         colors: ['#ffffff']
+                    },
+                    dropShadow: {
+                        enabled: true,
+                        top: 1,
+                        left: 1,
+                        blur: 1,
+                        color: '#000',
+                        opacity: 0.5
                     }
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['#0a0e27']
                 },
                 plotOptions: {
                     pie: {
@@ -411,19 +444,27 @@
                             labels: {
                                 show: true,
                                 name: {
-                                    color: '#ffffff'
+                                    show: true,
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    color: '#8b92b0',
+                                    offsetY: -10
                                 },
                                 value: {
-                                    color: '#ff4757',
-                                    fontSize: '20px',
+                                    show: true,
+                                    fontSize: '18px',
                                     fontWeight: 'bold',
+                                    color: '#ff4757',
+                                    offsetY: 5,
                                     formatter: function(val) {
                                         return 'Rp ' + parseFloat(val).toLocaleString('id-ID');
                                     }
                                 },
                                 total: {
                                     show: true,
-                                    label: 'Total',
+                                    label: 'Total Pengeluaran',
+                                    fontSize: '13px',
+                                    fontWeight: 600,
                                     color: '#8b92b0',
                                     formatter: function(w) {
                                         const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);

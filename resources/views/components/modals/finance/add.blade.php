@@ -60,12 +60,8 @@
 
                     <div class="mb-3">
                         <label class="form-label">Deskripsi</label>
-                        <div wire:ignore>
-                            <input id="addDescription" type="hidden" name="content">
-                            <trix-editor input="addDescription" 
-                                         wire:model="addDescription"
-                                         placeholder="Masukkan deskripsi transaksi..."></trix-editor>
-                        </div>
+                        <textarea class="form-control" wire:model="addDescription" rows="3" 
+                                  placeholder="Masukkan deskripsi transaksi..."></textarea>
                         @error('addDescription')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -74,14 +70,16 @@
                     <div class="mb-3">
                         <label class="form-label">Bukti Transaksi (Gambar)</label>
                         <input type="file" class="form-control" wire:model="addReceiptImage" 
-                               accept="image/*" onchange="previewImage(this, 'addPreview')">
+                               accept="image/*">
                         @error('addReceiptImage')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                         
                         @if($addReceiptImage)
                             <div class="mt-2">
-                                <img id="addPreview" class="receipt-preview" style="display: none;">
+                                <img src="{{ $addReceiptImage->temporaryUrl() }}" 
+                                     class="receipt-preview rounded" 
+                                     alt="Preview Receipt">
                             </div>
                         @endif
 
@@ -103,13 +101,3 @@
         </div>
     </div>
 </form>
-
-@push('scripts')
-<script>
-    document.addEventListener('trix-change', function(event) {
-        if (event.target.id === 'addDescription') {
-            @this.set('addDescription', event.target.value);
-        }
-    });
-</script>
-@endpush
